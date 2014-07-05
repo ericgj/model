@@ -9,7 +9,9 @@
     "ericgj/d3-dispatch": "*",
     "ericgj/d3-rebind": "*"
   },
-  "development": {},
+  "development": {
+    "timoxley/assert": "*"  
+  },
   "license": "MIT",
   "main": "index.js",
   "scripts": [

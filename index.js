@@ -28,8 +28,8 @@ module.exports = function(){
   
   model.attr = function(_,schema){
     schema = schema || {}
-    defaults[_] = defaultfn(schema.default);
-    casts[_]  = castfn(schema.type, castfns);
+    if (schema.default) defaults[_] = defaultfn(schema.default);
+    if (schema.type)    casts[_]    = castfn(schema.type, castfns);
     return this;
   }
 
