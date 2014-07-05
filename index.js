@@ -84,8 +84,9 @@ function defaultfn(defval){
 function castfn(type, fns){
   fns = fns || {};
   return function(val){
+    if (undefined === val) return val;
     if ('function' === typeof type) return type(val);
-    if (!fns[type]) throw new TypeError("unknown type: " + type);
+    if (!fns[type]) throw new TypeError("Unable to cast to unknown type: " + type);
     return fns[type](val);
   }
 }

@@ -1,7 +1,7 @@
 {
-  "name": "immutable-model",
-  "repo": "ericgj/immutable-model",
-  "description": "Framework-agnostic models for the browser",
+  "name": "model",
+  "repo": "ericgj/model",
+  "description": "Framework-agnostic immutable models for the browser",
   "version": "0.0.1",
   "keywords": [],
   "dependencies": {

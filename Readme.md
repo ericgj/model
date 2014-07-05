@@ -1,13 +1,13 @@
 
-# immutable-model
+# model
 
-  Framework agnostic models for the browser
+  Framework agnostic immutable models for the browser
 
 ## Installation
 
   Install with [component(1)](http://component.io):
 
-    $ component install ericgj/immutable-model
+    $ component install ericgj/model
 
 ## API
 
