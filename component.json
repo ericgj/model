@@ -1,0 +1,18 @@
+{
+  "name": "immutable-model",
+  "repo": "ericgj/immutable-model",
+  "description": "Framework-agnostic models for the browser",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {
+    "segmentio/extend": "*",
+    "ericgj/d3-dispatch": "*",
+    "ericgj/d3-rebind": "*"
+  },
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": [
+    "index.js"
+  ]
+}
