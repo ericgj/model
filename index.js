@@ -125,8 +125,8 @@ function applyObj(obj, attrfn){
 // update values
 function applyUpdateObj(obj, attrfn){
   var ret = extend({},obj);
-  for (var k in obj){
-    if (has.call(attrfn,k)) ret[k] = attrfn[k](obj[k]);
+  for (var k in attrfn){
+    if (has.call(obj,k)) ret[k] = attrfn[k](obj[k]);
   }
   return ret;
 }
