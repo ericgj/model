@@ -127,5 +127,43 @@ describe('changes', function(){
     assert.equal( actual.b, 'BBBB');
   })
 
+
+  it('change events are dispatched for each change', function(){
+    var m = subject()
+      , actual = []
+    m.on('set', function(k,v){ actual.push([k,v]); });
+    m.set('a', 'AA').set('b', 'BB').set('c', 11);
+    assert.equal(actual.length, 3);
+    assert.deepEqual(actual[0], ['a','AA']);
+    assert.deepEqual(actual[1], ['b','BB']);
+    assert.deepEqual(actual[2], ['c', 11 ]);
+  })
+
+  it('change events are dispatched for each change when set as an object', function(){
+    var m = subject()
+      , actual = []
+    m.on('set', function(k,v){ actual.push([k,v]); });
+    m.set( { 'a': 'AA', 'b': 'BB', c: 11 } );
+    assert.equal(actual.length, 3);
+  })
+  
 })
 
+describe('readOnly', function(){
+
+  var subject = model().attr('regular').attr('readOnly', { default: 'default', readOnly: true } )
+
+  it('changes to readOnly attributes are not applied', function(){
+    var actual = subject().set('regular',1).set('readOnly',2).value();  
+    console.log('model: readOnly: changes to readOnly attributes: %o', actual);
+    assert.equal(actual.readOnly, 'default');
+    assert.equal(actual.regular, 1);
+  })
+
+  it('changes to undefined attributes are not applied', function(){
+    var actual = subject({foo: 'foo'}).set('regular',1).set('foo',2).value();
+    console.log('model: readOnly: changes to undefined attributes: %o', actual);
+    assert.equal(actual.foo, 'foo');
+    assert.equal(actual.regular, 1);
+  })
+})

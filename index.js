@@ -19,7 +19,8 @@ var CASTFNS = {
 
 module.exports = function(){
 
-  var defaults = {}
+  var attrs = {}
+    , defaults = {}
     , casts  = {}
     , castfns = extend({}, CASTFNS)
 
@@ -29,6 +30,7 @@ module.exports = function(){
   
   model.attr = function(_,schema){
     schema = schema || {}
+    attrs[_] = !schema.readOnly;
     if (schema.default)  defaults[_] = defaultfn(schema.default);
     if (schema.type)     casts[_]    = castfn(schema.type, castfns);
     return this;
@@ -50,8 +52,10 @@ module.exports = function(){
         for (var k in attr) this.set(k,attr[k]);
         return this;
       }
-      changes.push([attr,val]);
-      dispatcher.set(attr, val);
+      if (attrs[attr]) {
+        changes.push([attr,val]);
+        dispatcher.set(attr, val);
+      }
       return this;
     }
 
