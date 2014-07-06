@@ -128,7 +128,7 @@ describe('changes', function(){
   })
 
 
-  it('change events are dispatched for each change', function(){
+  it('instance change events are dispatched for each change', function(){
     var m = subject()
       , actual = []
     m.on('set', function(k,v){ actual.push([k,v]); });
@@ -139,10 +139,30 @@ describe('changes', function(){
     assert.deepEqual(actual[2], ['c', 11 ]);
   })
 
-  it('change events are dispatched for each change when set as an object', function(){
+  it('instance change events are dispatched for each change when set as an object', function(){
     var m = subject()
       , actual = []
     m.on('set', function(k,v){ actual.push([k,v]); });
+    m.set( { 'a': 'AA', 'b': 'BB', c: 11 } );
+    assert.equal(actual.length, 3);
+  })
+  
+
+  it('model change events are dispatched for each change', function(){
+    var m = subject()
+      , actual = []
+    subject.on('set', function(it,k,v){ actual.push([it,k,v]); });
+    m.set('a', 'AA').set('b', 'BB').set('c', 11);
+    assert.equal(actual.length, 3);
+    assert.deepEqual(actual[0], [m, 'a','AA']);
+    assert.deepEqual(actual[1], [m, 'b','BB']);
+    assert.deepEqual(actual[2], [m, 'c', 11 ]);
+  })
+
+  it('model change events are dispatched for each change when set as an object', function(){
+    var m = subject()
+      , actual = []
+    subject.on('set', function(it,k,v){ actual.push([it,k,v]); });
     m.set( { 'a': 'AA', 'b': 'BB', c: 11 } );
     assert.equal(actual.length, 3);
   })

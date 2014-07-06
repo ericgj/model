@@ -24,6 +24,8 @@ module.exports = function(){
     , casts  = {}
     , castfns = extend({}, CASTFNS)
 
+  var modelDispatcher = dispatch('set','reset')
+
   model.cast = function(name,fn){
     castfns[name] = fn; return this;
   }
@@ -53,8 +55,9 @@ module.exports = function(){
         return this;
       }
       if (attrs[attr]) {
-        changes.push([attr,val]);
+        modelDispatcher.set(this, attr, val);
         dispatcher.set(attr, val);
+        changes.push([attr,val]);
       }
       return this;
     }
@@ -70,18 +73,20 @@ module.exports = function(){
     }
 
     self.reset = function(_){
+      modelDispatcher.reset(this,_);
+      dispatcher.reset(_);
       changes = [];
       obj = Object(_);
-      dispatcher.reset();
       return this;
     }
 
     obj = obj || {};
-    rebind(self, dispatcher, 'on');
 
+    rebind(self, dispatcher, 'on');
     return self.reset(obj);
   }
 
+  rebind(model, modelDispatcher, 'on');
   return model;
 }
 
