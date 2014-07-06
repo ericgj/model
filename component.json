@@ -2,7 +2,7 @@
   "name": "model",
   "repo": "ericgj/model",
   "description": "Framework-agnostic immutable models for the browser",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "keywords": [],
   "dependencies": {
     "segmentio/extend": "*",
