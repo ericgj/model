@@ -40,6 +40,7 @@ module.exports = function(){
       , self = {}
       , dispatcher = dispatch('set','reset')
 
+    // a bit expensive, not recommended
     self.get = function(attr){
       return this.value()[attr];
     }
@@ -49,7 +50,7 @@ module.exports = function(){
         for (var k in attr) this.set(k,attr[k]);
         return this;
       }
-      changes.push(attr,val);
+      changes.push([attr,val]);
       dispatcher.set(attr, val);
       return this;
     }
@@ -102,8 +103,8 @@ function castfn(type, fns){
 // add + update values
 function changeObj(obj, chgs){
   var ret = extend({},obj);
-  for (var i=0, chg=chgs[i]; i<chgs.length; ++i){
-    ret[ chg[0] ] = chg[1];
+  for (var i=0; i<chgs.length; ++i){
+    ret[ chgs[i][0] ] = chgs[i][1];
   }
   return ret;
 }

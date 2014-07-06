@@ -92,3 +92,40 @@ describe('casts', function(){
 
 })
 
+describe('changes', function(){
+  
+  var subject = model().attr('a', { default: 'A' })
+                       .attr('b', { default: 'B' })
+                       .attr('c', { type: 'number'})
+                       .attr('d', { default: true, type: 'boolean' })
+                       .attr('e')
+
+  it('changes to default object are applied', function(){
+    var actual = subject()
+                   .set('e', 1)
+                   .set('d', 1)
+                   .set('c', '1')
+                   .set('b', 'BB')
+                   .set('d', '')
+                   .set('a', 'AA').value();
+    
+    console.log('model: changes: applied to default object: %o', actual);
+    assert.equal( actual.a, 'AA'  );
+    assert.equal( actual.b, 'BB'  );
+    assert.equal( actual.c, 1     );
+    assert.equal( actual.d, false );
+    assert.equal( actual.e, 1     );
+  })
+
+  it('changes to passed object are applied', function(){
+    var actual = subject( { 'a': 'AA', 'b': 'BB' } )
+                   .set('b', 'BBB')
+                   .set('b', 'BBBB').value();
+
+    console.log('model: changes: applied to passed object: %o', actual);
+    assert.equal( actual.a, 'AA' );
+    assert.equal( actual.b, 'BBBB');
+  })
+
+})
+
