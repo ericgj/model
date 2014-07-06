@@ -18,17 +18,17 @@
 <a name="api"></a>
 ## API
 
-var model = <b>require('model')</b>()
+<a name="api_model">#</a> var model = <b>require('model')</b>()
 
 Model constructor.
 
-model.<b>attr</b>(<i>name</i> [, <i>schema</i>])
+<a name="api_model_attr">#</a> model.<b>attr</b>(<i>name</i> [, <i>schema</i>])
 
 Define attribute `name` with given `schema` object. The schema can specify 
 a default value (`default`), a data type (`type`), and whether or not the
 attribute is read-only (`readOnly`).
 
-model.<b>cast</b>(<i>type</i>, <i>function</i>)
+<a name="api_model_cast">#</a> model.<b>cast</b>(<i>type</i>, <i>function</i>)
 
 Define a custom conversion function for the specified `type`. Built-in casts
 are provided for the seven core JSON Schema types, but these can be overriden
@@ -42,26 +42,27 @@ For instance:
        .cast('comma-delim', function(s){ return String(s).split(','); })
 ```
 
-var instance = <b>model</b>([<i>object</i>])
+<a name="api_instance">#</a> var instance = <b>model</b>([<i>object</i>])
 
 Construct an instance of the model by calling the model as a function. If 
 `object` is passed, it extends the default.
 
-instance.<b>value</b>()
+<a name="api_instance_value">#</a> instance.<b>value</b>()
 
 Get the current value (plain object) of the instance. All attributes are
 casted if their type has been specified. Attributes on the original object
 that are not specified in the model are passed through unchanged.
 
-instance.<b>changes</b>()
+<a name="api_instance_changes">#</a> instance.<b>changes</b>()
 
 Get an object representing the changes made to attributes. Useful for 
 `PATCH`-style updates.
 
-instance.<b>get</b>(<i>attribute</i>)
+<a name="api_instance_get">#</a> instance.<b>get</b>(<i>attribute</i>)
 
 Get the current (casted) value of the attribute.
 
+<a name="api_instance_set">#</a><br/>
 instance.<b>set</b>(<i>attribute</i>, <i>value</i>) <br/>
 instance.<b>set</b>(<i>object</i>)
 
@@ -71,7 +72,7 @@ Set an attribute (or attributes if an object is passed). If the attribute is
 Dispatches a 'set' event with the attribute and value as parameters. See
 below, [Events](#events).
 
-instance.<b>reset</b>([<i>object</i>])
+<a name="api_instance_reset">#</a> instance.<b>reset</b>([<i>object</i>])
 
 Resets internal state of the instance without losing event observers. In
 other words, it's equivalent to creating a new model instance, except that 
@@ -87,6 +88,7 @@ signature is the same, except the model events have the instance as the first
 parameter. If you have used [component/model][compmodel] or [modella][modella], 
 this should seem familiar. 
 
+<a name="api_events_set">#</a><br/>
 model.on(<b>'set'</b>, <i>handler</i>) <br/>
 instance.on(<b>'set'</b>, <i>handler</i>)
 
@@ -94,6 +96,7 @@ Fired on `instance.set`, calling the handler with the passed attribute and
 value. Note `set(object)` calls result in multiple `set` events, one per
 attribute-value pair.
 
+<a name="api_events_reset">#</a><br/>
 model.on(<b>'reset'</b>, <i>handler</i>) <br/>
 instance.on(<b>'reset'</b>, <i>handler</i>)
 
