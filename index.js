@@ -24,7 +24,7 @@ module.exports = function(){
     , casts  = {}
     , castfns = extend({}, CASTFNS)
 
-  var modelDispatcher = dispatch('set','reset')
+  var modelDispatcher = dispatch('setting', 'set', 'resetting', 'reset');
 
   model.cast = function(name,fn){
     castfns[name] = fn; return this;
@@ -42,7 +42,7 @@ module.exports = function(){
 
     var changes = []
       , self = {}
-      , dispatcher = dispatch('set','reset')
+      , dispatcher = dispatch('setting', 'set', 'resetting', 'reset')
 
     // a bit expensive, not recommended
     self.get = function(attr){
@@ -55,9 +55,13 @@ module.exports = function(){
         return this;
       }
       if (attrs[attr]) {
+        modelDispatcher.setting(this, attr, val);
+        dispatcher.setting(attr, val);
+        
+        changes.push([attr,val]);
+
         modelDispatcher.set(this, attr, val);
         dispatcher.set(attr, val);
-        changes.push([attr,val]);
       }
       return this;
     }
@@ -73,10 +77,15 @@ module.exports = function(){
     }
 
     self.reset = function(_){
-      modelDispatcher.reset(this,_);
-      dispatcher.reset(_);
+      modelDispatcher.resetting(this,_);
+      dispatcher.resetting(_);
+      
       changes = [];
       obj = Object(_);
+      
+      modelDispatcher.reset(this,_);
+      dispatcher.reset(_);
+      
       return this;
     }
 

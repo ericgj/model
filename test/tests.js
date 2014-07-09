@@ -143,8 +143,9 @@ describe('changes', function(){
     var m = subject()
       , actual = []
     m.on('set', function(k,v){ actual.push([k,v]); });
+    m.on('setting', function(k,v){ actual.push([k,v]); });
     m.set( { 'a': 'AA', 'b': 'BB', c: 11 } );
-    assert.equal(actual.length, 3);
+    assert.equal(actual.length, 6);
   })
   
 
@@ -163,8 +164,9 @@ describe('changes', function(){
     var m = subject()
       , actual = []
     subject.on('set', function(it,k,v){ actual.push([it,k,v]); });
+    subject.on('setting', function(it,k,v){ actual.push([it,k,v]); });
     m.set( { 'a': 'AA', 'b': 'BB', c: 11 } );
-    assert.equal(actual.length, 3);
+    assert.equal(actual.length, 6);
   })
   
 })

@@ -101,17 +101,30 @@ model.on(<b>'reset'</b>, <i>handler</i>) <br/>
 instance.on(<b>'reset'</b>, <i>handler</i>)
 
 Fired on `instance.reset`, calling the handler with the passed object.
+Note this is the "raw" passed object, not the `model.value()`.
 
-Note that events are fired _before_ state changes, so you can check existing
+<a name="api_events_setting">#</a><br/>
+model.on(<b>'setting'</b>, <i>handler</i>) <br/>
+instance.on(<b>'setting'</b>, <i>handler</i>)
+
+Same as `set`, but fired _before_ state changes.
+
+<a name="api_events_resetting">#</a><br/>
+model.on(<b>'resetting'</b>, <i>handler</i>) <br/>
+instance.on(<b>'resetting'</b>, <i>handler</i>)
+
+Same as `reset`, but fired _before_ state changes.
+
+Note that `setting` and `resetting` events can be used to check existing
 state in an event handler:
 
 ```js
-  model.on('set', function(instance,attr,val){
+  model.on('setting', function(instance,attr,val){
     var oldval = instance.get(attr);
     // do something comparing oldval with val 
   })
 
-  instance.on('reset', function(obj){
+  instance.on('resetting', function(obj){
     var oldobj = instance.value()
     // do something comparing oldobj with obj
   })
