@@ -33,8 +33,8 @@ module.exports = function(){
   model.attr = function(_,schema){
     schema = schema || {}
     attrs[_] = !schema.readOnly;
-    if (schema.default)  defaults[_] = defaultfn(schema.default);
-    if (schema.type)     casts[_]    = castfn(schema.type, castfns);
+    if (has.call(schema,'default'))  defaults[_] = defaultfn(schema.default);
+    if (has.call(schema,'type'))     casts[_]    = castfn(schema.type, castfns);
     return this;
   }
 

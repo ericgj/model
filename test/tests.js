@@ -9,6 +9,7 @@ describe('defaults', function(){
     model().attr('A', { default: 'default' } )
            .attr('B', { default: [] } )
            .attr('C')
+           .attr('D', { default: null })
 
   it('sets defaults on empty object', function(){
     var actual = subject().value();
@@ -30,11 +31,17 @@ describe('defaults', function(){
   })
 
   it('passes through attributes that have not been defined', function(){
-    var actual = subject({ B: [1,2], D: "something new"}).value();
+    var actual = subject({ B: [1,2], X: "something new"}).value();
     console.log('model: defaults: undefined attributes: %o', actual);
     assert.equal( actual.A, "default" );
     assert.deepEqual( actual.B, [1,2]);
-    assert.equal( actual.D, "something new" );
+    assert.equal( actual.X, "something new" );
+  })
+
+  it('set null defaults', function(){
+    var actual = subject().value();
+    console.log('model: defaults: null default: %o', actual);
+    assert( actual.D === null );
   })
 
 })
