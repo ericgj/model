@@ -58,6 +58,12 @@ casted if their type or explicit cast has been specified. Attributes on the
 original object that are not specified in the model, as well as read-only
 attributes, are passed through unchanged.
 
+<a name="api_instance_changedValue">#</a> instance.<b>changedValue</b>()
+
+Get the _changed_ value (plain object) of the instance. All specified,
+non-read-only attributes with a current value are included. Read-only and
+unspecified attributes are _not_ included.
+
 <a name="api_instance_changes">#</a> instance.<b>changes</b>()
 
 Get an object representing the changes made to attributes. Useful for 
