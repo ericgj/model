@@ -46,7 +46,7 @@ describe('defaults', function(){
 
 })
 
-describe('casts', function(){
+describe('default casts', function(){
 
   var subject =
     model().attr('string',  { type: 'string' })
@@ -56,9 +56,7 @@ describe('casts', function(){
            .attr('null',    { type: 'null' })
            .attr('array',   { type: 'array' })
            .attr('object',  { type: 'object' })
-           .attr('custom',  { type: 'upcase' })
            .attr('notype')
-           .cast('upcase', function(v){ return String(v).toUpperCase(); })
 
   it('casts not applied to empty object', function(){
     var actual = subject().value();
@@ -72,7 +70,7 @@ describe('casts', function(){
     assert.equal( actual.foo, '42' );
   })
 
-  it('casts applied to string values', function(){
+  it('default casts applied to string values', function(){
     var actual = subject({
       'string': '1', 
       'boolean': '2', 
@@ -81,7 +79,6 @@ describe('casts', function(){
       'null': '5',
       'array': '6',
       'object': '7',
-      'custom': '8',
       'notype': '9'
     }).value()
 
@@ -93,8 +90,29 @@ describe('casts', function(){
     assert.equal( actual['null'], null );
     assert( actual['array'] instanceof Array );
     assert.equal( typeof actual['object'], 'object' );
-    assert.equal( actual['custom'], '8' );
     assert.equal( actual['notype'], '9' );
+  })
+
+})
+
+describe('explicit casts', function(){
+
+  var subject =
+    model().cast('uppercase', function(raw){ return String(raw).toUpperCase(); })
+           .cast('simpleint', function(raw){ return +raw; })
+           .attr('uppercase',  { type: 'string' })
+           .attr('simpleint')
+ 
+  it('should apply the explicit cast when no default', function(){
+    var actual = subject({'simpleint': '-123'}).value();
+    console.log('model: explicit casts: when no default: %o', actual);
+    assert.equal( actual['simpleint'], -123 );
+  })
+
+  it('should apply the explicit cast instead of the default', function(){ 
+    var actual = subject({'uppercase': 'heeelllo'}).value();
+    console.log('model: explicit casts: when default: %o', actual);
+    assert.equal( actual['uppercase'], 'HEEELLLO' );
   })
 
 })

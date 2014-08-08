@@ -22,19 +22,21 @@ module.exports = function(){
   var attrs = {}
     , defaults = {}
     , casts  = {}
-    , castfns = extend({}, CASTFNS)
+    , castfns = extend({}, CASTFNS)  // probably don't need to extend since not mutating any more
 
   var modelDispatcher = dispatch('setting', 'set', 'resetting', 'reset');
 
-  model.cast = function(name,fn){
-    castfns[name] = fn; return this;
+  model.cast = function(_,fn){
+    casts[_] = castfn(fn); return this;
   }
   
   model.attr = function(_,schema){
     schema = schema || {}
     attrs[_] = !schema.readOnly;
-    if (has.call(schema,'default'))  defaults[_] = defaultfn(schema.default);
-    if (has.call(schema,'type'))     casts[_]    = castfn(schema.type, castfns);
+    if (has.call(schema,'default'))  
+      defaults[_] = defaultfn(schema.default);
+    if (has.call(schema,'type'))
+      casts[_]    = casts[_] || castfn(schema.type, castfns);  // default cast by type
     return this;
   }
 

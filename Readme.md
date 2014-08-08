@@ -28,18 +28,22 @@ Define attribute `name` with given `schema` object. The schema can specify
 a default value (`default`), a data type (`type`), and whether or not the
 attribute is read-only (`readOnly`).
 
-<a name="api_model_cast">#</a> model.<b>cast</b>(<i>type</i>, <i>function</i>)
+<a name="api_model_cast">#</a> model.<b>cast</b>(<i>name</i>, <i>function</i>)
 
-Define a custom conversion function for the specified `type`. Built-in casts
-are provided for the seven core JSON Schema types, but these can be overriden
-and extended. The main use-case is converting (often string) values from view
-input elements into a canonical representation.
+Define a custom conversion function for the specified attribute `name`. When
+`type` is specified for an attribute, the attribute is cast using build-in cast
+functions. Specifying `cast` overrides this default casting.  
+
+Typically, `cast` is used in converting string values (from CSV data or view
+input elements, for instance), into a useful representation.
 
 For instance:
 
 ```js
-  model.attr('tags', { type: 'comma-delim' })
-       .cast('comma-delim', function(s){ return String(s).split(','); })
+  model.attr('tags',  { type: 'string' })
+       .attr('count', { type: 'number' })
+       .cast('tags',  function(s){ return String(s).split(','); }) 
+       .cast('count', function(s){ return +s; }) 
 ```
 
 <a name="api_instance">#</a> var instance = <b>model</b>([<i>object</i>])
@@ -50,8 +54,9 @@ Construct an instance of the model by calling the model as a function. If
 <a name="api_instance_value">#</a> instance.<b>value</b>()
 
 Get the current value (plain object) of the instance. All attributes are
-casted if their type has been specified. Attributes on the original object
-that are not specified in the model are passed through unchanged.
+casted if their type or explicit cast has been specified. Attributes on the
+original object that are not specified in the model, as well as read-only
+attributes, are passed through unchanged.
 
 <a name="api_instance_changes">#</a> instance.<b>changes</b>()
 
