@@ -125,7 +125,7 @@ describe('changes', function(){
                        .attr('d', { default: true, type: 'boolean' })
                        .attr('e')
 
-  it('changes to default object are applied', function(){
+  it('value includes all changes applied to default object', function(){
     var actual = subject()
                    .set('e', 1)
                    .set('d', 1)
@@ -134,7 +134,7 @@ describe('changes', function(){
                    .set('d', '')
                    .set('a', 'AA').value();
     
-    console.log('model: changes: applied to default object: %o', actual);
+    console.log('model: changes: value, default object: %o', actual);
     assert.equal( actual.a, 'AA'  );
     assert.equal( actual.b, 'BB'  );
     assert.equal( actual.c, 1     );
@@ -142,16 +142,42 @@ describe('changes', function(){
     assert.equal( actual.e, 1     );
   })
 
-  it('changes to passed object are applied', function(){
+  it('value includes all changes applied to passed object', function(){
     var actual = subject( { 'a': 'AA', 'b': 'BB' } )
                    .set('b', 'BBB')
                    .set('b', 'BBBB').value();
 
-    console.log('model: changes: applied to passed object: %o', actual);
+    console.log('model: changes: value, passed object: %o', actual);
     assert.equal( actual.a, 'AA' );
     assert.equal( actual.b, 'BBBB');
   })
 
+  it('change includes all and only changed attributes', function(){
+    var actual = subject( { 'a': 'AA', 'b': 'BB' } )
+                   .set('b', 'BBB')
+                   .set('b', 'BBBB').change();
+    
+    console.log('model: changes: change: %o', actual);
+    assert.deepEqual( actual, {b: 'BBBB'} );
+  })
+
+  it('changes lists all changes in order', function(){
+    var actual = subject()
+                   .set('e', 1)
+                   .set('d', 1)
+                   .set('c', '1')
+                   .set('b', 'BB')
+                   .set('d', '')
+                   .set('a', 'AA').changes();
+    console.log('model: changes: changes: %o', actual);
+    assert.equal( actual.length, 6 );
+    assert.deepEqual( actual[0], ['e',1] );
+    assert.deepEqual( actual[1], ['d',1] );
+    assert.deepEqual( actual[2], ['c','1'] );
+    assert.deepEqual( actual[3], ['b','BB'] );
+    assert.deepEqual( actual[4], ['d',''] );
+    assert.deepEqual( actual[5], ['a','AA'] );
+  })
 
   it('instance change events are dispatched for each change', function(){
     var m = subject()
@@ -194,6 +220,7 @@ describe('changes', function(){
     assert.equal(actual.length, 6);
   })
   
+
 })
 
 describe('readOnly', function(){
@@ -222,6 +249,7 @@ describe('changedValue', function(){
                        .attr('name',       { type: 'string' })
                        .attr('issleeping', { default: true, type: 'boolean' })
                        .cast('issleeping', function(s){ return +s == 1; })
+                       .calc('iswaking',   function(v){ return !v.issleeping; })
   
   it('does not have readOnly attributes', function(){
     var actual = subject({id: 3421}).set('name','Eric').set('issleeping','1').changedValue();
@@ -234,4 +262,59 @@ describe('changedValue', function(){
     console.log('model: changedValue: undefined attributes: %o', actual);
     assert(!has.call(actual, 'mood')); 
   })
+
+  it('does not have calculated attributes', function(){
+    var actual = subject({id: 3421}).set('name','Eric').set('issleeping','1').changedValue();
+    console.log('model: changedValue: calculated attributes: %o', actual);
+    assert(!has.call(actual,'iswaking'));
+  })
+
 })
+
+
+describe('calculations', function(){
+ 
+  var subject = model().attr('attn',     {type: 'string'})
+                       .attr('street',   {type: 'string'})
+                       .attr('city',     {type: 'string'})
+                       .attr('state',    {type: 'string'})
+                       .attr('postcode', {type: 'number'})
+                       .calc('address', function(v){
+                         return [
+                           v.attn ? "Attn: " + v.attn : null,
+                           v.street,
+                           v.city + ", " + v.state + " " + v.postcode
+                         ].filter( function(line){ return !!line; })
+                          .join('\n')
+                       });
+
+  it('includes calculations in value', function(){
+    var actual = subject().set({ street: "2888 Miller Ln",
+                                 city:   "Bird In Hand", state: "PA", postcode: 17505
+                              }).value()
+    console.log('model: calculations: value: %o', actual);
+    assert.equal( actual.address,
+                  ["2888 Miller Ln", "Bird In Hand, PA 17505"].join("\n")
+                );
+  })
+
+  it('does not include calculations in change', function(){
+    var actual = subject({attn: "Hank"})
+                   .set({ street: "2888 Miller Ln",
+                          city:   "Bird In Hand", state: "PA", postcode: 17505
+                       }).change()
+    console.log('model: calculations: change: %o', actual);
+    assert( !has.call(actual, 'address') );
+  })
+
+  it('does not include calculations in changedValue', function(){
+    var actual = subject({attn: "Hank"})
+                   .set({ street: "2888 Miller Ln",
+                          city:   "Bird In Hand", state: "PA", postcode: 17505
+                       }).changedValue()
+    console.log('model: calculations: changedValue: %o', actual);
+    assert( !has.call(actual, 'address') );
+  })
+
+});
+

@@ -23,11 +23,16 @@ module.exports = function(){
     , defaults = {}
     , casts  = {}
     , castfns = extend({}, CASTFNS)  // probably don't need to extend since not mutating any more
+    , calcs = {}
 
   var modelDispatcher = dispatch('setting', 'set', 'resetting', 'reset');
 
   model.cast = function(_,fn){
     casts[_] = castfn(fn); return this;
+  }
+
+  model.calc = function(_,fn){
+    calcs[_] = fn; return this;
   }
   
   model.attr = function(_,schema){
@@ -70,7 +75,7 @@ module.exports = function(){
 
     self.value = function(){
       var raw = changeObj( applyObj(obj, defaults), changes);
-      return applyUpdateObj( raw, casts );
+      return applyObjCalc( applyUpdateObj( raw, casts ), calcs );
     }
 
     self.changedValue = function(){
@@ -80,6 +85,10 @@ module.exports = function(){
     }
 
     self.changes = function(){
+      return changes;
+    }
+
+    self.change = function(){
       var raw = changeObj( {}, changes );
       return applyUpdateObj( raw, casts );
     }
@@ -149,6 +158,15 @@ function applyUpdateObj(obj, attrfn){
   var ret = extend({},obj);
   for (var k in attrfn){
     if (has.call(obj,k)) ret[k] = attrfn[k](obj[k]);
+  }
+  return ret;
+}
+
+// add + update values according to functions of entire object (calcs)
+function applyObjCalc(obj, attrfn){
+  var ret = extend({},obj);
+  for (var k in attrfn){
+    ret[k] = attrfn[k](obj);
   }
   return ret;
 }

@@ -46,6 +46,12 @@ For instance:
        .cast('count', function(s){ return +s; }) 
 ```
 
+<a name="api_model_calc">#</a> model.<b>calc</b>(<i>name</i>, <i>function</i>)
+
+Define a calculated attribute `name` using the specified `function`. Note the
+function is called on the _casted_ current value, not the raw value.
+
+
 <a name="api_instance">#</a> var instance = <b>model</b>([<i>object</i>])
 
 Construct an instance of the model by calling the model as a function. If 
@@ -56,18 +62,23 @@ Construct an instance of the model by calling the model as a function. If
 Get the current value (plain object) of the instance. All attributes are
 casted if their type or explicit cast has been specified. Attributes on the
 original object that are not specified in the model, as well as read-only
-attributes, are passed through unchanged.
+attributes, are passed through unchanged. Calculated attributes are also
+included.
 
 <a name="api_instance_changedValue">#</a> instance.<b>changedValue</b>()
 
 Get the _changed_ value (plain object) of the instance. All specified,
 non-read-only attributes with a current value are included. Read-only and
-unspecified attributes are _not_ included.
+unspecified attributes are _not_ included, nor are calculated attributes.
+
+<a name="api_instance_change">#</a> instance.<b>change</b>()
+
+Get an object representing the applied changes made to attributes. Useful for
+`PATCH`-style updates.
 
 <a name="api_instance_changes">#</a> instance.<b>changes</b>()
 
-Get an object representing the changes made to attributes. Useful for 
-`PATCH`-style updates.
+Get an array of all changes as `[attribute, value]` pairs.
 
 <a name="api_instance_get">#</a> instance.<b>get</b>(<i>attribute</i>)
 
