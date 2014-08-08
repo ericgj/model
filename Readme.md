@@ -22,13 +22,20 @@
 
 Model constructor.
 
-<a name="api_model_attr">#</a> model.<b>attr</b>(<i>name</i> [, <i>schema</i>])
+<a name="api_model_attr">#</a><br/> 
+model.<b>attr</b>(<i>name</i> [, <i>schema</i>])<br/>
+model.<b>attr</b>(<i>object</i>)
 
 Define attribute `name` with given `schema` object. The schema can specify 
 a default value (`default`), a data type (`type`), and whether or not the
 attribute is read-only (`readOnly`).
 
-<a name="api_model_cast">#</a> model.<b>cast</b>(<i>name</i>, <i>function</i>)
+The single-argument form allows you to specify multiple attributes by passing
+an object whose keys are attribute names and whose values are schemas.
+
+<a name="api_model_cast">#</a><br/>
+model.<b>cast</b>(<i>name</i>, <i>function</i>)<br/>
+model.<b>cast</b>(<i>object</i>)
 
 Define a custom conversion function for the specified attribute `name`. When
 `type` is specified for an attribute, the attribute is cast using build-in cast
@@ -46,10 +53,18 @@ For instance:
        .cast('count', function(s){ return +s; }) 
 ```
 
-<a name="api_model_calc">#</a> model.<b>calc</b>(<i>name</i>, <i>function</i>)
+The single-argument form allows you to specify multiple casts by passing
+an object whose keys are attribute names and whose values are cast functions.
+
+<a name="api_model_calc">#</a><br/> 
+model.<b>calc</b>(<i>name</i>, <i>function</i>)<br/>
+model.<b>calc</b>(<i>object</i>)
 
 Define a calculated attribute `name` using the specified `function`. Note the
 function is called on the _casted_ current value, not the raw value.
+
+The single-argument form allows you to specify multiple calculations by passing
+an object whose keys are attribute names and whose values are calc functions.
 
 
 <a name="api_instance">#</a> var instance = <b>model</b>([<i>object</i>])
