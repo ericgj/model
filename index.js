@@ -73,6 +73,12 @@ module.exports = function(){
       return applyUpdateObj( raw, casts );
     }
 
+    self.changedValue = function(){
+      return filterObj( self.value(),
+                        function(attr){ return !!attrs[attr]; } 
+                      );
+    }
+
     self.changes = function(){
       var raw = changeObj( {}, changes );
       return applyUpdateObj( raw, casts );
@@ -143,6 +149,15 @@ function applyUpdateObj(obj, attrfn){
   var ret = extend({},obj);
   for (var k in attrfn){
     if (has.call(obj,k)) ret[k] = attrfn[k](obj[k]);
+  }
+  return ret;
+}
+
+// remove keys
+function filterObj(obj, fn){
+  var ret = {};
+  for (var k in obj){
+    if (has.call(obj,k) && !!fn(k)) ret[k] = obj[k];
   }
   return ret;
 }

@@ -214,3 +214,24 @@ describe('readOnly', function(){
     assert.equal(actual.regular, 1);
   })
 })
+
+
+describe('changedValue', function(){
+
+  var subject = model().attr('id',         { readOnly: true, type: 'number' })
+                       .attr('name',       { type: 'string' })
+                       .attr('issleeping', { default: true, type: 'boolean' })
+                       .cast('issleeping', function(s){ return +s == 1; })
+  
+  it('does not have readOnly attributes', function(){
+    var actual = subject({id: 3421}).set('name','Eric').set('issleeping','1').changedValue();
+    console.log('model: changedValue: readOnly attributes: %o', actual);
+    assert(!has.call(actual, 'id')); 
+  })
+
+  it('does not have undefined attributes', function(){
+    var actual = subject({id: 3421}).set('name','Eric').set('mood','grouchy').changedValue();
+    console.log('model: changedValue: undefined attributes: %o', actual);
+    assert(!has.call(actual, 'mood')); 
+  })
+})
