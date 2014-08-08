@@ -115,6 +115,19 @@ describe('explicit casts', function(){
     assert.equal( actual['uppercase'], 'HEEELLLO' );
   })
 
+  it('should allow casts to be specified as an object', function(){
+    var subject = model().attr('uppercase', { type: 'string' })
+                         .attr('simpleint')
+                         .cast({ 
+                           'uppercase': function(raw){ return String(raw).toUpperCase(); },
+                           'simpleint': function(raw){ return +raw; } 
+                         })
+    var actual = subject({'simpleint': '-123', 'uppercase': 'heeelllo'}).value();
+    console.log('model: explicit casts: specified as object: %o', actual);
+    assert.equal( actual['simpleint'], -123 );
+    assert.equal( actual['uppercase'], 'HEEELLLO' );
+  })
+
 })
 
 describe('changes', function(){
@@ -152,6 +165,23 @@ describe('changes', function(){
     assert.equal( actual.b, 'BBBB');
   })
 
+  it('should allow attrs to be specified as an object', function(){
+    var subject =  model().attr( {
+                     'a': { default: 'A' },
+                     'b': { default: 'B' },
+                     'c': { type: 'number'},
+                     'd': { default: true, type: 'boolean' },
+                     'e': {}
+                   })
+    var actual = subject( { 'a': 'AA', 'b': 'BB' } )
+                   .set('b', 'BBB')
+                   .set('b', 'BBBB').value();
+
+    console.log('model: changes: value, attrs specified as object: %o', actual);
+    assert.equal( actual.a, 'AA' );
+    assert.equal( actual.b, 'BBBB');
+  })
+
   it('change includes all and only changed attributes', function(){
     var actual = subject( { 'a': 'AA', 'b': 'BB' } )
                    .set('b', 'BBB')
@@ -177,6 +207,19 @@ describe('changes', function(){
     assert.deepEqual( actual[3], ['b','BB'] );
     assert.deepEqual( actual[4], ['d',''] );
     assert.deepEqual( actual[5], ['a','AA'] );
+  })
+
+  it('dirty is true after change', function(){
+    var actual = subject()
+                   .set('e', 1).dirty();
+    console.log('model: changes: dirty after change: %o', actual);
+    assert.equal( actual, true );
+  })
+
+  it('dirty is false when no changes', function(){
+    var actual = subject( { 'a': 'AA', 'b': 'BB' } ).dirty()
+    console.log('model: changes: dirty before change: %o', actual);
+    assert.equal( actual, false );
   })
 
   it('instance change events are dispatched for each change', function(){
@@ -314,6 +357,32 @@ describe('calculations', function(){
                        }).changedValue()
     console.log('model: calculations: changedValue: %o', actual);
     assert( !has.call(actual, 'address') );
+  })
+
+  it('should allow calcs to be specified as an object', function(){
+    var calcs = {
+      'address': function(v){
+         return [
+           v.attn ? "Attn: " + v.attn : null,
+           v.street,
+           v.city + ", " + v.state + " " + v.postcode
+         ].filter( function(line){ return !!line; })
+          .join('\n');
+       }
+    };
+    var subject = model().attr('attn',     {type: 'string'})
+                         .attr('street',   {type: 'string'})
+                         .attr('city',     {type: 'string'})
+                         .attr('state',    {type: 'string'})
+                         .attr('postcode', {type: 'number'})
+                         .calc( calcs );
+    var actual = subject().set({ street: "2888 Miller Ln",
+                                 city:   "Bird In Hand", state: "PA", postcode: 17505
+                              }).value()
+    console.log('model: calculations: calcs specified as object: %o', actual);
+    assert.equal( actual.address,
+                  ["2888 Miller Ln", "Bird In Hand, PA 17505"].join("\n")
+                );
   })
 
 });

@@ -28,14 +28,28 @@ module.exports = function(){
   var modelDispatcher = dispatch('setting', 'set', 'resetting', 'reset');
 
   model.cast = function(_,fn){
-    casts[_] = castfn(fn); return this;
+    if (arguments.length == 1 && 'object' == typeof _){
+      for (var k in _) this.cast(k,_[k]);
+      return this;
+    }
+    casts[_] = castfn(fn); 
+    return this;
   }
 
   model.calc = function(_,fn){
-    calcs[_] = fn; return this;
+    if (arguments.length == 1 && 'object' == typeof _){
+      for (var k in _) this.calc(k,_[k]);
+      return this;
+    }
+    calcs[_] = fn; 
+    return this;
   }
   
   model.attr = function(_,schema){
+    if (arguments.length == 1 && 'object' == typeof _){
+      for (var k in _) this.attr(k,_[k]);
+      return this;
+    }
     schema = schema || {}
     attrs[_] = !schema.readOnly;
     if (has.call(schema,'default'))  
@@ -86,6 +100,10 @@ module.exports = function(){
 
     self.changes = function(){
       return changes;
+    }
+
+    self.dirty = function(){
+      return changes.length > 0;
     }
 
     self.change = function(){

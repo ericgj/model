@@ -59,11 +59,10 @@ Construct an instance of the model by calling the model as a function. If
 
 <a name="api_instance_value">#</a> instance.<b>value</b>()
 
-Get the current value (plain object) of the instance. All attributes are
-casted if their type or explicit cast has been specified. Attributes on the
-original object that are not specified in the model, as well as read-only
-attributes, are passed through unchanged. Calculated attributes are also
-included.
+Get the current value (plain object) of the instance. Attributes are casted
+if their type or an explicit cast has been specified. Attributes on the
+original object that are not specified in the model are passed through
+unchanged. Calculated attributes are also included.
 
 <a name="api_instance_changedValue">#</a> instance.<b>changedValue</b>()
 
@@ -79,6 +78,10 @@ Get an object representing the applied changes made to attributes. Useful for
 <a name="api_instance_changes">#</a> instance.<b>changes</b>()
 
 Get an array of all changes as `[attribute, value]` pairs.
+
+<a name="api_instance_dirty">#</a> instance.<b>dirty</b>()
+
+Sugar for `instance.changes().length > 0` .
 
 <a name="api_instance_get">#</a> instance.<b>get</b>(<i>attribute</i>)
 
