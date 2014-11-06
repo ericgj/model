@@ -116,7 +116,7 @@ module.exports = function(){
       dispatcher.resetting(_);
       
       changes = [];
-      obj = Object(_);
+      if (arguments.length > 0) obj = Object(_);
       
       modelDispatcher.reset(this,_);
       dispatcher.reset(_);

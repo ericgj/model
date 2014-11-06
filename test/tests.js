@@ -387,3 +387,33 @@ describe('calculations', function(){
 
 });
 
+describe('reset', function(){
+
+  var subject;
+  beforeEach( function(){
+    subject = model().attr('foo', { default: 11})
+                     .attr('bar');
+  });
+
+  it('should reset to inital value if no parameter passed to reset', function(){
+    var entity = subject({'foo': 1, 'bar': 2, 'baz': 3});
+    var expected = entity.value();
+    entity.set('bar', 3);
+    entity.reset();
+    var actual = entity.value();
+    console.log('model: reset: to initial value: %o %o', expected, actual);
+    assert.deepEqual(actual, expected);
+  });
+
+  it('should reset to new value if parameter passed to reset', function(){
+    var entity = subject({'foo': 1, 'bar': 2, 'baz': 3});
+    entity.set('bar', 3);
+    entity.reset({foo: 111});
+    var expected = subject({foo: 111}).value();
+    var actual = entity.value();
+    console.log('model: reset: to new value: %o %o', expected, actual);
+    assert.deepEqual(actual, expected);
+  });
+
+});
+

@@ -116,8 +116,9 @@ below, [Events](#events).
 
 Resets internal state of the instance without losing event observers. In
 other words, it's equivalent to creating a new model instance, except that 
-any event observers on the instance are maintained. Dispatches a 'reset' 
-event. 
+any event observers on the instance are maintained. If no <i>object</i> is 
+passed, then it simply clears the changes but does not change the underlying
+base object passed in the constructor. Dispatches a 'reset' event. 
 
 
 <a name="events"></a>
