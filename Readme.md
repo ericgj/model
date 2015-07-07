@@ -1,7 +1,7 @@
 
 # model
 
-  Simple, framework-agnostic, immutable models for the browser.
+  Simple, framework-agnostic, persistent models for the browser.
 
   * Declarative attributes based on [JSON Schema][jsonschema]
   * Defaults
